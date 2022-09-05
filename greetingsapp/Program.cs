@@ -6,7 +6,7 @@ string cmdtype = string.Empty;
 do
 {
     string [] command  = Input.getInput();
-    cmdtype= command[0]; 
+    cmdtype= command[0].ToLower(); 
     switch (cmdtype)
     {
         case "greet":
@@ -23,6 +23,9 @@ do
         break;
         case "help":
         Console.WriteLine(Output.help());
+        break;
+        default:
+        Console.WriteLine("Invalid command. please, enter 'help' to check all valid commands");
         break;
 
     }

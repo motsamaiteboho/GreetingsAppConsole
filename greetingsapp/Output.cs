@@ -5,37 +5,44 @@ public static class Output
     public static string Greet(string[] command)
     {
         string greeting  = string.Empty;
-        if(command.Length == 3  && command[2] != string.Empty)
+        Dictionary<string,string> languaages = new(){
+            {"english", "Hello"},  {"afrikaans", "Hallo"},  {"sesotho", "Dumelang"}
+        };
+        string Name = command.Length !=1 ? command[1].ToLower().Trim(): string.Empty;
+        if(command.Length == 3)
         {
-        switch (command[2])
-        {
-            case "english":
-                greeting += $"Hello, {command[1]}";
-            break;
-            case "afrikaans":
-                greeting += $"Hallo, {command[1]}";
-            break;
-            case "sesotho":
-                greeting += $"Dumelang, {command[1]}";
-            break;
-            default:
-                greeting += $"Hello, {command[1]}. {command[2]} laguage is curretly not supported";
-            break;
-        }
+            string Lang = command[2].ToLower().Trim();
+            if(languaages.ContainsKey(Lang))
+            {
+                foreach(var language in languaages)
+                {
+                    if(language.Key == Lang)
+                        greeting += $"{language.Value}, {Name}";
+                }
+                AddUser(Name);
+            }
+            else
+            {
+                greeting += $"Hello, {Name}. {Lang} laguage is curretly not supported";
+            }
         }
         else
         {
-             greeting += $"Hello, {command[1]}";
+             if(command.Length == 2)
+             {
+                 greeting += $"Hello, {Name}";
+                AddUser(Name);
+             }
+             else
+                greeting += "please specify the name and language, enter 'help' to check all valid commands";
         }
-        AddUser(command[1]);
         return greeting;
     }
 
 
-
     private static void AddUser(string name)
     {
-        string newUser = name.ToLower();
+        string newUser = name.ToLower().Trim();
         if(!users.ContainsKey(newUser))
             users.Add(newUser, 1);
         else
@@ -46,22 +53,29 @@ public static class Output
     {
 
         string sResult = string.Empty;
-
         if(command.Length == 2)
         {
-            if(users.ContainsKey(command[1]))
-                sResult += $"{command[1]}  has been greeted {users[command[1]]} times";
+            Console.WriteLine("GREETED USER");
+            Console.WriteLine("=================");
+            string Name = command[1].ToLower().Trim();
+            if(users.ContainsKey(Name))
+                sResult += $"{Name}  has been greeted {users[Name]} times";
             else
-                sResult += $"{command[1]} hasn't been greeted";
+                sResult += $"{Name} hasn't been greeted";
         }
         else
         {
-            Console.WriteLine("GREETED USERS");
-            Console.WriteLine("=================");
-            foreach(var user in users)
+            if(command.Length == 1)
             {
-                sResult += $"{user.Key} : {user.Value} \n";
+                Console.WriteLine("GREETED USERS");
+                Console.WriteLine("=================");
+                foreach(var user in users)
+                {
+                    sResult += $"{user.Key} : {user.Value} \n";
+                }
             }
+            else
+                sResult += "Invalid arguments. please, enter 'help' to check all valid commands";
         }
         return sResult;
     }
@@ -69,21 +83,23 @@ public static class Output
     {
         string  sResults = string.Empty;
         int count = users.Values.Count;
-        sResults += $"The number of users is  {count}";
+        sResults += $"The number of users is {count}";
         return sResults;
     }
     public static string Clear(string[] command)
     {
         string sResult = string.Empty;
+        
         if(command.Length == 2)
         {
-            if(users.ContainsKey(command[1]))
+            string Name = command[1].ToLower().Trim();
+            if(users.ContainsKey(Name))
             {
-                users.Remove(command[1]);
-                sResult += $"{command[1]} has been cleared";
+                users.Remove(Name);
+                sResult += $"{Name} has been cleared";
             }
             else
-                sResult += $"{command[1]} hasn't been greeted";
+                sResult += $"{Name} hasn't been greeted";
         }
         else
         {
